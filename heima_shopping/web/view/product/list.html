@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>商品列表</title>
+		<link rel="stylesheet" href="http://www.itheima331.com:8020/web/resources/css/bootstrap.min.css" type="text/css" />
+		<script src="http://www.itheima331.com:8020/web/resources/js/jquery-1.11.3.min.js" type="text/javascript"></script>
+		<script src="http://www.itheima331.com:8020/web/resources/js/bootstrap.min.js" type="text/javascript"></script>
+		<script type="text/javascript" src="http://www.itheima331.com:8020/web/resources/js/jquery-heima-0.0.1.js" ></script>
+		<script type="text/javascript" src="http://www.itheima331.com:8020/web/resources/js/heima-include.js" ></script>
+		<!-- 引入自定义css文件 style.css -->
+
+		<style>
+		</style>
+	</head>
+	<script type="text/javascript">
+		$(function(){
+			//获取页面传递的分类主键
+			var cid = HM.getParameter("cid");
+			//获取当前页
+			var currentPage=HM.getParameter("currentPage");
+			
+			var param="method=findByPage&cid="+cid+"&currentPage="+currentPage;
+			
+			
+			
+			HM.ajax("/product",param,function(data){
+				if(data.code==1){
+					//取得集合类对象
+					var pb=data.obj;
+					//集合类中的商品list集合对象
+					var productList=pb.list;
+					//要添加商品的位置
+					var product = $("#product");
+					
+					$.each(productList, function(index,ele) {
+						//遍历商品，取元素替换html
+						var str ="<div style=\"height:260px\" class=\"col-md-2\">\n" +
+        "\t\t\t\t\t\t<a href=\"http://www.itheima331.com:8020/web/view/product/info.html?pid="+ele.pid+"\">\n" +
+        "\t\t\t\t\t\t\t<img src=\"http://www.itheima331.com:8020/web/"+ele.pimage+"\" width=\"170\" height=\"170\" style=\"display: inline-block;\">\n" +
+        "\t\t\t\t\t\t</a>\n" +
+        "\t\t\t\t\t\t<p><a href=\"http://www.itheima331.com:8020/web/view/product/info.html?pid="+ele.pid+"\" style='color:green'>"+ele.pname+"</a></p>\n" +
+        "\t\t\t\t\t\t<p><font color=\"#FF0000\">商城价：&yen;"+ele.shop_price+"</font></p>\n" +
+        "\t\t\t\t\t</div>";
+        			//添加div,商品
+        			product.append(str);
+					});
+					//把添加页码的有序标签拿到
+					var page=$("#page");
+					//处理页码
+//					for(var i=1;i<=pb.totalPage;i++){
+//						var s="<li><a href=\"http://www.itheima331.com:8020/web/view/product/list.html?currentPage="+i+"&cid="+cid+"\">"+i+"</a></li>";
+//						page.append(s);
+//					}
+					//工具函数生成分页，需要pageBean对象，
+					var s=HM.page(pb,"http://www.itheima331.com:8020/web/view/product/list.html?cid="+cid);
+					page.html(s);
+				}
+			});
+		});
+		
+	</script>
+	<body>
+			<div class="container-fluid">
+			<div id="header" style="min-height: 130px;"></div>	
+			<div class="container">
+				<div id="product" class="row" style="width:1210px;margin:0 auto;">
+		
+				</div>
+		
+				<!--分页 -->
+				<div style="width:380px;margin:0 auto;margin-top:50px;">
+					<ul id="page" class="pagination" style="text-align:center; margin-top:10px;">
+						<!--通过分页函数，添加进来的数据-->
+					</ul>
+				</div>
+				<!-- 分页结束=======================        -->
+		
+				<!--
+		       		商品浏览记录:
+		        -->
+				<div style="width:1210px;margin:0 auto; padding: 0 9px;border: 1px solid #ddd;border-top: 2px solid #999;height: 246px;">
+		
+					<h4 style="width: 50%;float: left;font: 14px/30px " 微软雅黑 ";">浏览记录</h4>
+					<div style="width: 50%;float: right;text-align: right;"><a href="">more</a></div>
+					<div style="clear: both;"></div>
+		
+					<div style="overflow: hidden;">
+		
+						<ul style="list-style: none;">
+							<li style="width: 150px;height: 216;float: left;margin: 0 8px 0 0;padding: 0 18px 15px;text-align: center;"><img src="http://www.itheima331.com:8020/web/resources/products/1/cs10001.jpg" width="130px" height="130px" /></li>
+						</ul>
+		
+					</div>
+				</div>
+			</div>
+			<div id="footer"  style="min-height: 203px;"></div>
+		</div>
+	</body>
+
+</html>

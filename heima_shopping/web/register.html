@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+
+	<head></head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>会员注册</title>
+	<link rel="stylesheet" href="http://www.itheima331.com:8020/web/resources/css/bootstrap.min.css" type="text/css" />
+	<script src="http://www.itheima331.com:8020/web/resources/js/jquery-1.11.3.min.js" type="text/javascript"></script>
+	<script src="http://www.itheima331.com:8020/web/resources/js/bootstrap.min.js" type="text/javascript"></script>
+	<script type="text/javascript" src="http://www.itheima331.com:8020/web/resources/js/jquery-heima-0.0.1.js" ></script>
+	<script type="text/javascript" src="http://www.itheima331.com:8020/web/resources/js/heima-include.js" ></script>
+	<!-- 引入自定义css文件 style.css -->
+	<style>
+	</style>
+	<script type="text/javascript">
+		$(function(){
+//			注册点击绑定事件
+			$("#regBut").click(function(){
+				var params = $("#regForm").serialize();
+				//ajax 发送数据到servlet
+				
+//				工具函数,传递url,参数,回调函数
+				HM.ajax("/user",params,function(data){
+//					判断响应回来的json，的code属性，状态码,为1就是注册成功,返回首页
+					if(data.code==1){
+						//成功，返回首页
+						location.href="http://www.itheima331.com:8020/web/login.html"
+					}
+				});
+				
+				
+			});
+		});
+		
+	</script>
+	</head>
+	<body>
+		<div class="container-fluid">
+			<!--头部-->
+			<div id="header" style="min-height: 130px;"></div>
+			<div class="container-fluid" style="width:98%;background:url('http://www.itheima331.com:8020/web/resources/img/regist_bg.jpg');">
+				<div class="row">
+					<div class="col-md-2"></div>
+					<div class="col-md-8" style="background:#fff;padding:40px 80px;margin:30px;border:7px solid #ccc;">
+						<font style="color: #3164af;font-size: 18px;font-weight: normal;padding: 0 10px;">会员注册</font>USER REGISTER
+						<form id="regForm" class="form-horizontal" style="margin-top:5px;" method="post">
+							<input type="hidden" name="method" value="register">
+							<div class="form-group">
+								<label for="username" class="col-sm-2 control-label">用户名</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="username" placeholder="请输入用户名" name="username">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="inputPassword3" class="col-sm-2 control-label">密码</label>
+								<div class="col-sm-6">
+									<input type="password" class="form-control" id="inputPassword3" placeholder="请输入密码" name="password">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="confirmpwd" class="col-sm-2 control-label">确认密码</label>
+								<div class="col-sm-6">
+									<input type="password" class="form-control" id="confirmpwd" placeholder="请输入确认密码">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="inputEmail3" class="col-sm-2 control-label">Email</label>
+								<div class="col-sm-6">
+									<input type="email" class="form-control" id="inputEmail3" placeholder="Email" name="email">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="usercaption" class="col-sm-2 control-label">姓名</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="usercaption" placeholder="请输入姓名" name="name">
+								</div>
+							</div>
+							<div class="form-group opt">
+								<label for="inlineRadio1" class="col-sm-2 control-label">性别</label>
+								<div class="col-sm-6">
+									<label class="radio-inline">
+									  <input type="radio" name="gender" id="inlineRadio1" value="男"> 男
+									</label>
+									<label class="radio-inline">
+									  <input type="radio" name="gender" id="inlineRadio2" value="女"> 女
+									</label>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="date" class="col-sm-2 control-label">出生日期</label>
+								<div class="col-sm-6">
+									<input type="date" class="form-control" name="birthday">
+								</div>
+							</div>
+	
+							<div class="form-group">
+								<label for="date" class="col-sm-2 control-label">验证码</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control">
+	
+								</div>
+								<div class="col-sm-2">
+									<img src="http://www.itheima331.com:8020/web/resources/img/captcha.png" />
+								</div>
+	
+							</div>
+	
+							<div class="form-group">
+								<div class="col-sm-offset-2 col-sm-10">
+									<input id="regBut" type="button" width="100" value="注册" name="submit" border="0"  style="background-color:#CD062D;height:35px;width:100px;color:white;">
+								</div>
+							</div>
+						</form>
+					</div>
+	
+					<div class="col-md-2"></div>
+	
+				</div>
+			</div>
+			<!--尾部-->
+			<div id="footer"  style="min-height: 203px;"></div>
+		</div>
+	</body>
+</html>

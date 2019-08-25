@@ -1,0 +1,159 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>购物车</title>
+		<link rel="stylesheet" href="http://www.itheima331.com:8020/web/resources/css/bootstrap.min.css" type="text/css" />
+		<script src="http://www.itheima331.com:8020/web/resources/js/jquery-1.11.3.min.js" type="text/javascript"></script>
+		<script src="http://www.itheima331.com:8020/web/resources/js/bootstrap.min.js" type="text/javascript"></script>
+		<script type="text/javascript" src="http://www.itheima331.com:8020/web/resources/js/jquery-heima-0.0.1.js" ></script>
+		<script type="text/javascript" src="http://www.itheima331.com:8020/web/resources/js/heima-include.js" ></script>
+		<!-- 引入自定义css文件 style.css -->
+		<style>
+		</style>
+	</head>
+	<script type="text/javascript">
+		$(function(){
+			//页面加载完成，返回购物车数据
+			HM.ajax("/cart?method=showCart","",function(data){
+				if(data.code==1){
+					//添加商品的总价格
+					$("#total").html(data.obj.total);
+					//取出购物项
+					var item = data.obj.itemMap;
+					//找到购物车表
+					var cart =$("#Cart");
+					$.each(item, function(index,ele) {
+						var str = "<tr class=\"active\">\n" +
+        "\t\t\t\t\t\t\t\t\t<td width=\"60\" width=\"40%\">\n" +
+        "\t\t\t\t\t\t\t\t\t\t<input type=\"hidden\" name=\"id\" value=\"22\">\n" +
+        "\t\t\t\t\t\t\t\t\t\t<img src=\"http://www.itheima331.com:8020/web/"+ele.product.pimage+"\" width=\"70\" height=\"60\">\n" +
+        "\t\t\t\t\t\t\t\t\t</td>\n" +
+        "\t\t\t\t\t\t\t\t\t<td width=\"30%\">\n" +
+        "\t\t\t\t\t\t\t\t\t\t<a target=\"_blank\">"+ele.product.pname+"</a>\n" +
+        "\t\t\t\t\t\t\t\t\t</td>\n" +
+        "\t\t\t\t\t\t\t\t\t<td width=\"20%\">\n" +
+        "\t\t\t\t\t\t\t\t\t\t￥"+ele.product.shop_price+"\n" +
+        "\t\t\t\t\t\t\t\t\t</td>\n" +
+        "\t\t\t\t\t\t\t\t\t<td width=\"10%\">\n" +
+        "\t\t\t\t\t\t\t\t\t\t"+ele.count+"\n" +
+        "\t\t\t\t\t\t\t\t\t</td>\n" +
+        "\t\t\t\t\t\t\t\t\t<td width=\"15%\">\n" +
+        "\t\t\t\t\t\t\t\t\t\t<span class=\"subtotal\">￥"+ele.subTotal+"</span>\n" +
+        "\t\t\t\t\t\t\t\t\t</td>\n" +
+        "\t\t\t\t\t\t\t\t\t<td>\n" +		//注意,多加''号,是担心,主键为字符串的时候不能识别,主键为int,无所谓
+        "\t\t\t\t\t\t\t\t\t\t<a onclick=\"removeItem('"+ele.product.pid+"')\" href=\"javascript:;\" class=\"delete\">删除</a>\n" +
+        "\t\t\t\t\t\t\t\t\t</td>\n" +
+        "\t\t\t\t\t\t\t\t</tr>";
+        			
+        			//追加进购物车
+        			cart.append(str);
+					});
+				}
+			});
+		});
+		//删除购物项的函数
+		function removeItem(pid){
+			if(confirm("确定要删除此商品吗？"+pid)){
+				HM.ajax("/cart?method=removeItem","pid="+pid,function(data){
+					if(data.code==1){
+						//重新加载当前页
+						location.reload();
+					}
+				});
+			}
+		}
+		//清空购物车函数
+		function clearItem(){
+			if(confirm("确定要清空购物车吗？")){
+				//发送ajax请求
+				HM.ajax("/cart?method=clearItem","",function(data){
+					if(data.code==1){
+						location.reload();
+					}
+				});
+			}
+		}
+		//提交订单的函数
+		function submitOrder(){
+			//发送AJAX请求
+			HM.ajax("/order?method=submitOrder","",function(data){
+				if(data.code==2){
+					//没有登录跳转到登录页面
+					alert("没有登录，去登录界面")
+					location.href="http://www.itheima331.com:8020/web/login.html"
+				}else if(data.code==0){
+					alert("购物车中没有商品");
+				}else if(data.code==1){
+					//取出响应回来的订单
+					var oid = data.obj;
+					//跳转到订单详情
+					location.href="http://www.itheima331.com:8020/web/view/order/info.html";
+				}
+				
+			});
+		}
+	</script>
+	<body>
+		<div class="container-fluid"  >
+			<!--头部-->
+			<div id="header" style="min-height: 130px;"></div>	
+			<div class="container" style="min-height: 441px;">
+				<div class="row">
+					<div style="margin:0 auto; margin-top:10px;width:950px;">
+						<strong style="font-size:16px;margin:5px 0;">购物车详情</strong>
+						<table id="Cart" class="table table-bordered">
+							<tbody>
+								<tr class="warning">
+									<th>图片</th>
+									<th>商品</th>
+									<th>价格</th>
+									<th>数量</th>
+									<th>小计</th>
+									<th>操作</th>
+								</tr>
+								<!--<tr class="active">
+									<td width="60" width="40%">
+										<input type="hidden" name="id" value="22">
+										<img src="http://www.itheima331.com:8020/web/resources/products/1/donggua1.jpg" width="70" height="60">
+									</td>
+									<td width="30%">
+										<a target="_blank"> 有机蔬菜      大冬瓜...</a>
+									</td>
+									<td width="20%">
+										￥298.00
+									</td>
+									<td width="10%">
+										2
+									</td>
+									<td width="15%">
+										<span class="subtotal">￥596.00</span>
+									</td>
+									<td>
+										<a href="javascript:" class="delete">删除</a>
+									</td>
+								</tr>-->
+							</tbody>
+						</table>
+					</div>
+				</div>
+	
+				<div style="margin-right:130px;">
+					<div style="text-align:right;">
+						商品总金额: <strong style="color:#ff6600;">￥<span id="total">596.00</span>元</strong>
+					</div>
+					<div style="text-align:right;margin-top:10px;margin-bottom:10px;">
+						<a onclick="clearItem()" href="javascript:;" id="clear" class="clear">清空购物车</a>
+						<a href="javascript:;">
+							<input onclick="submitOrder()" type="button" width="100" value="提交订单" id="submit" border="0" style="background-color:#CD062D;height:35px;width:100px;color:white;">
+						</a>
+					</div>
+				</div>
+			</div>
+			<!--尾部-->
+			<div id="footer"  style="min-height: 203px;"></div>
+		</div>
+	</body>
+</html>
